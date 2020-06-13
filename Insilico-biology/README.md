@@ -11,6 +11,8 @@ To select the ones who are exstracellulair SingalP must be detected.\
 Only SignalP can only handle one sequence at a time. so the fasta file created is parsed into mutliple files containing one protein sequence\
 This is all combined in one python script and if an error occours. you will start where you left so no progress is lost (duration of python script is around 12 hours, it should be improved to send the job to the super cluster)
 
+Due loads of files are created by SignalP, a pythons crypt was used to make a summary of it.
+
 
 
 ![alt text](https://github.com/Dirowa/Python-scripts/blob/master/Insilico-biology/Pipeline_donny.png)
