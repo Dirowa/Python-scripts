@@ -1,0 +1,35 @@
+##########################################################
+# Required: HMM package, 1 fasta file containing proteins#
+# ########################################################
+
+#!/bin/bash
+#SBATCH -t 8:00:00
+#SBATCH -c 16
+
+#meuk , Fasta file van ATGM en Pfamm nog wat kopieren naar TMPDIR
+cd /home/atgm2029/final/data
+cp atgm_augustus.fasta $TMPDIR
+cp Pfam-A.hmm $TMPDIR
+
+#ga naar TMPDIR
+cd $TMPDIR
+
+#even checken of het kopieren goed ging
+ls -la -h
+
+#Modules inladen
+module load pre2019 biorunner
+
+#--cuttc = trust thres-holdpfam
+#--tblout <f> = alles opslaan in een tabel vorm
+#--noali geen allignment opslaan
+
+hmmsearch --cut_tc --tblout pfam_table --noali Pfam-A.hmm atgm_augustus.fasta
+
+#check of het is gelukt
+ls -la -h
+
+#output kopieren naar DATA
+cp $TMPDIR/pfam_table /home/atgm2029/final/data
+
+ls -la -h /home/atgm2029/final/data
