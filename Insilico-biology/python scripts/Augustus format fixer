@@ -1,0 +1,69 @@
+#######################################################
+# To fix the output file of augustus (DNA -> proteins)#
+# to get it in the right format for other tools       #
+#######################################################
+
+
+#########################
+#openen van lijsten en zo#
+##########################
+#Geschreven door : Donny Vrins, Niels Mol , Giulia, Nynke
+naam=[]
+seq=[]
+seqAA=""
+filenaam = "atgm2029_AUGUSTUS.ggf"
+opslagnaam = "atgm_augustus.faa"
+i = 0
+############################################
+# File door gaan en Seq en naam opschrijven#
+############################################
+
+#file openen en lezen
+with open(filenaam, 'r') as file:
+    #elke line naast gaan
+    for line in file:
+        #wanneer de [ komt begint de actie
+        if "[" in line:
+            #zodra hij een end gene tegen komt gaat hij uit de loop waardoor de file functie False is
+            #en verder gaat met de volgende line, waardan weer wordt gekeken of er een [ is
+            while "end gene" not in line:
+                #lines opschonen met #, protein sequence = en [ weg halen
+                line = line.replace ("#","").replace('protein sequence =','').replace("[",'')
+                #alle spaties weghalen
+                line = ''.join(line.split())
+                #SeqAA alle lines toevoegen
+                seqAA += line.rstrip()
+                #doorgaan naar volgende line. als de line end gene is stopt hij er mee
+                line = next(file)
+        elif "start gene" in line:
+            naam.append(line.rstrip().replace("#",""))
+
+#seq alle ] apart zetten dat het list elementen zijn
+seq =(seqAA.split(']'))
+#alle legen list items weg halen
+seqs = list(filter(None,seq))
+#aan het einde van elke list element een * toevoegen (want Fasta format :D )
+seqs = [seq + "*" for seq in seqs]
+
+print(seqs)
+print(naam)
+
+
+#################################
+#mooie file van maken###########
+################################
+
+#opslag naam die je aan het begin kan bepalen
+opslagnaam1 = opslagnaam + ".fasta"
+#filen openen
+f = open(opslagnaam1,"w")
+
+#zolang i kleiner of even groot is aan het aantal elementen in een list
+while i <= (len(seq)):
+    #schrijf dit heel erg mooi op > met de nummer element van de key, pls een een hele leuke nieuwe regel
+    f.write((">" + (naam[i]) + "\n"))
+    f.write((seqs[i] + "\n\r"))
+    #print("_-------------------------------")
+    i += 1
+#file sluiten :D
+f.close()
