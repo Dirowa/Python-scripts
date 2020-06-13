@@ -19,6 +19,7 @@ This is done by a shell script, who uses a tarzip of OrthoMCL containing all scr
 
 To gain all avaible knowledge about the proteins of the proteins HMM search is used with the HMM package. a shell script is used to preform this
 
+a python script is used to generate a summary of OrthoMCL and HMM search for the requested gene ID of cellulose
 
 ![alt text](https://github.com/Dirowa/Python-scripts/blob/master/Insilico-biology/Pipeline_donny.png)
 
