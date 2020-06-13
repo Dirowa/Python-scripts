@@ -1,0 +1,44 @@
+###############################################
+# generates a csv file of ORTHOMCL            #
+# when used also use the corrector to add NULL#
+# Values for querying                         #
+###############################################
+
+
+path_to_file = 'groups_tags.txt'
+file2 = "group_tags_comma_separated.txt"
+
+lists = []
+################################################3
+# GEMAAKT DOOR DONNY VRINS                   ###
+# ALS JE DIT GEBRUIKT GEEF HEM EEN KOP KOFFIE ##
+#################################################
+
+# open de file
+#leest elke line
+#split de line into a list door elke tab
+#voeg de list toe aan lists
+with open(path_to_file, 'r') as file:
+    for line in file:
+        lists.append(line.split("\t"))
+
+# open the list of lists
+# make the file or edit it who is the safename
+# write as first header
+with open(file2,'w') as f:
+    f.write('Orthologue_ID,Orthologue_group,species and gene\n')
+    #for submission ID,
+    B = 0
+    #voor elke lijst in de lijste gaat hij 1 voor 1 af
+    for item in lists:
+       #reset de A element weer terug naar 1 (als je 0 doet dan pakt hij de oG groups
+        A = 1
+        #bepaal het aantal alementen in de lijst
+        #zolang A kleiner is dan het aantal elementen blijft hij het opschrijven
+        while A < len(item):
+            #de eerste B is de submission ID, Primary key
+            #de item[0] is de orthologe group,
+            #item[A} is de gene en species geval die door circuleert
+            f.write( str(B) +','+(item[0])[:-1] + "," + item[A] + "\n")
+            A = A + 1
+            B += 1
