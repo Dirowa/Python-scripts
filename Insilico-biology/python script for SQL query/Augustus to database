@@ -1,0 +1,132 @@
+#generates a comma delimated table as input for SQLite3
+
+# Required
+# Gene_ID, protein sequence. startcodon_location,
+# #stop codon location , intron locations, transcripts, cds
+
+
+File1 = 'atgm2029_AUGUSTUS.ggf'
+seqAA = ''
+gene_number = []
+seq= []
+start_codon = []
+stop_codon =[]
+transcript =[]
+gene =[]
+strand = []
+intron = []
+CDS = []
+I = -1
+
+
+with open (File1, 'r') as file:
+    for line in file:
+        if "start gene" in line:
+            StartCheck = 0
+            StopCheck = 0
+            IntronCheck = 0
+            TMP = ((line.split(' '))[3].rstrip())
+            gene_number.append(TMP)
+            line = next(file)
+            lineB = ""
+            #CDS.append(lineB)
+            while "#" not in line:
+
+                if "start_codon" in line:
+                    StartCheck += 1
+                    lineA = ((line.split("\t"))[3])
+                    lineB = ((line.split("\t"))[4])
+                    lineC = ''
+                    lineC += lineA + " - " + lineB
+                    #print (TMP)
+                    #line.append(TMP)
+                    #print (line)
+                    start_codon.append(lineC)
+
+                elif "stop_codon" in line:
+                    StopCheck += 1
+                    lineA = ((line.split("\t"))[3])
+                    lineB = ((line.split("\t"))[4])
+                    lineC = ''
+                    lineC += lineA + " - " + lineB
+                    stop_codon.append(lineC)
+
+                elif "AUGUSTUS	transcript" in line:
+                    lineA = ((line.split("\t"))[3])
+                    lineB = ((line.split("\t"))[4])
+                    lineC = ''
+                    lineC += lineA + " - " + lineB
+                    transcript.append(lineC)
+
+                elif "AUGUSTUS	gene" in line:
+                    lineA = ((line.split("\t"))[3])
+                    lineB = ((line.split("\t"))[4])
+                    lineC = ''
+                    lineC += lineA + " - " + lineB + " "
+                    gene.append(lineC)
+                    line = ((line.split("\t"))[6])
+                    strand.append(line)
+                if 'AUGUSTUS	CDS' in line:
+                    #print(line)
+                    lineC =''
+                    while "AUGUSTUS	CDS" in line:
+                        lineA = ((line.split("\t"))[3])
+                        lineB = ((line.split("\t"))[4])
+                        lineC += lineA + " - " + lineB +" "
+                        line = next(file)
+                    #print(lineC)
+                    CDS.append(lineC)
+                if 'AUGUSTUS	intron' in line:
+                    #print(line)
+                    lineC =''
+                    IntronCheck += 1
+                    while "AUGUSTUS	intron" in line:
+                        lineA = ((line.split("\t"))[3])
+                        lineB = ((line.split("\t"))[4])
+                        lineC += lineA + " - " + lineB
+                        line = next(file)
+                    #print(lineC)
+                    intron.append(lineC)
+
+
+                else:
+                    line = next(file)
+            if StopCheck == 0 :
+                stop_codon.append('NULL')
+            if StartCheck == 0 :
+                start_codon.append('NULL')
+            if IntronCheck == 0 :
+                intron.append('NULL')
+
+        if "[" in line:
+            seq.append (seqAA)
+
+            while "end gene" not in line:
+               if "protein sequence" in line:
+                    seqAA = ((line.split('['))[1]).rstrip()
+                    line = next(file)
+               else:
+                   seqAA += ((line.split(' '))[1]).rstrip()
+                   line = next(file)
+
+
+
+seq.append (seqAA)
+seq = list(filter(None,seq))
+print (len(gene_number))
+print (len(seq))
+print (len(start_codon))
+print (len(stop_codon))
+print (len(transcript))
+print(len(gene))
+print (len(strand))
+print (len(CDS))
+print (len(intron))
+
+
+f = open("test.txt","w")
+I = 0
+while I <= len(gene_number):
+    f.write(str(gene_number[I]) + "," + str(seq[I][:-1]) + "," + str(start_codon[I]) + "," + str(stop_codon[I]) + "," + str(transcript[I])  + "," + str(gene[I]) + "," + str(strand[I]) + "," + str(CDS[I]) + "," + str(intron[I]) + "\n")
+    I += 1
+f.close()
