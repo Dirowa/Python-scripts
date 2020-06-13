@@ -23,5 +23,6 @@ a python script is used to generate a summary of OrthoMCL and HMM search for the
 
 ![alt text](https://github.com/Dirowa/Python-scripts/blob/master/Insilico-biology/Pipeline_donny.png)
 
+From these files is MUSCLE and RAXML shell command use to create a phylogenetic tree and a python script is used to generate a final table of all exstra cellular proteins who have cellulase funcion and are orphans of orthologue groups
 
 
