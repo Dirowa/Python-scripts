@@ -1,0 +1,142 @@
+##########################################################################
+# due a large amount of files is created by Signal P.                    #
+# this scrypt makes an easy to read, tab delimated file all data combined#
+##########################################################################
+
+
+#############################
+# iniate things and modules##
+#############################
+import os
+
+
+
+path_to_data = ("C:\Avans\BIoinformatica\shell\singalP-data")
+Output_name = ("Summary-SingalP")
+
+Summary_files_to_read =[]
+TMPDIR_file_name_container = ""
+
+genID = []
+mature_seq = []
+MW = []
+CS_position = []
+SP = []
+da =""
+
+
+weights = {'A': 71.04, 'C': 103.01, 'D': 115.03, 'E': 129.04, 'F': 147.07,
+       'G': 57.02, 'H': 137.06, 'I': 113.08, 'K': 128.09, 'L': 113.08,
+       'M': 131.04, 'N': 114.04, 'P': 97.05, 'Q': 128.06, 'R': 156.10,
+       'S': 87.03, 'T': 101.05, 'V': 99.07, 'W': 186.08, 'Y': 163.06 }
+
+
+##################################
+# CREATING THE FILES TO INPUT#####
+##################################
+
+#make a list of all files in dir
+files = os.listdir(path_to_data)
+#for every file in dir
+for file in files:
+    #complete the path dir to open
+    file1 = path_to_data + "/" + file
+    #if file contains mature
+    if "mature" in file1:
+        #open file as file3
+        with open(file1, 'r') as file3:
+            #if file is not empty
+            if not os.stat(file1).st_size == 0:
+                #read every line
+                #if one of the lines contain "Y" then put the file
+                #name in the list and TMPDIR file container
+                for line in file3:
+                    Summary_files_to_read.append(file)
+                    TMPDIR_file_name_container = (file)
+
+    #if file contains summary
+    elif "summary" in file:
+        #open the file
+        with open(file1, 'r'):
+            #look if the gene_g2389 summary already exist in file (in tmpdir container
+            file2 = file[15:25]
+            if file2 in TMPDIR_file_name_container:
+                #fill file name to the list to read
+                Summary_files_to_read.append(file)
+#print (path_to_data)
+#print (Summary_files_to_read)
+
+##########################################
+## Getting data for the table####################
+##########################################
+
+
+#for every file in sumamry files to read
+for file in Summary_files_to_read:
+    #make a path
+    file1 = path_to_data+ "/" + file
+    #print(file1)
+    #open with with as file 2
+    with open(file1,'r') as file2:
+        #if the file contains mature
+        if "mature" in file1:
+            #read every line
+            for line in file2:
+                #if file contains > save the genID (removing the >)
+                if ">" in line:
+                    genID.append(line[1:].rstrip())
+                #rest of the file is the protein sequence
+                else:
+                    mature_seq.append(line.rstrip())
+        #if file contains summary
+        elif "summary" in file1:
+            for line in file2:
+                #the data we need doesnt contain #
+                if "#" not in line:
+                    #the part is the singelpeptide score
+                    SP.append(line[32:41].rstrip())
+                    #the part is the single peptide position
+                    CS_position.append(line[41:].rstrip())
+
+
+#calc moleculair weight in KDA
+#for every sequence in mature seq
+for seq in mature_seq:
+    #da is the sum of the weight for every aminoacid in the table weights
+    da=(sum(weights[p] for p in seq))
+    proteinnumber = 0
+    for P in seq:
+            proteinnumber += weights[p]
+            m1 = round(proteinnumber/1000, 4)
+            mw.append(mw1)
+
+#print (genID)
+#print (mature_seq)
+#print (MW)
+#print (CS_position)
+#print (SP)
+
+###########################################
+# Creating a tab delimeterd file###########
+###########################################
+
+
+headers =[' gene ID ',"\t", 'Size of mature protein',"\t",'SignalP Decision score',"\t",'putative cleavage site',"\t",'protein sequence',]
+row_format = "{:>1}" * (len(headers) + 1)
+with open(Output_name,'w') as file:
+    header1 = (row_format.format("",*headers))
+    header2 = (header1 + "\r")
+    file.write(header2)
+    i = 0
+    while i <= len(genID):
+        print (i)
+        #row = ( + " | "  + , genID[i] ," | " , MW[i] , " | "  ,SP[i]  , " | " , CS_position[i] , " | " , mature_seq[i])
+        gen = str(genID[i])
+        mw = str(MW[i])
+        sp = str(SP[i])
+        CS = str(CS_position[i])
+        seq = str(mature_seq[i])
+        row = (gen + "\t"+mw+ "kda \t"+ sp + " \t" +CS + " \t" +seq+"\r")
+        i += 1
+        file.write(row)
+
