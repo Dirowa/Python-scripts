@@ -1,0 +1,10 @@
+f = open ('SingalP_summary_corrected.txt','w')
+i = 0
+with open("singnalP_summary.txt",'r') as file:
+    for line in file:
+        i += 1
+        line = line.replace('\t',',')
+        line = (line[5:])
+        f.write( str(i) +','+ str(line))
+
+f.close()
