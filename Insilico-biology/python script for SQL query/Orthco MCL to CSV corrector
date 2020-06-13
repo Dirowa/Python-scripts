@@ -1,0 +1,31 @@
+################################################3##
+# Corrector to add NULL values for easier querying#
+####################################################
+
+
+file = 'group_tags_comma_separated.txt'
+file2= 'group_tags_comma_separated_v2.txt'
+
+f = open(file2,'w')
+with open(file,'r') as file:
+    for line in file:
+        if line in ['\n', '\r\n']:
+            print(line)
+        else:
+            line = line.rstrip()
+            line1 = line.split(' ')
+            line = line.split(',')
+            print(line1)
+        #ABISPORUS, ATCC, A_sydowii, ATGM
+            if "Abisporus_varbisporus" in line[2]:
+                f.write (str(line[0])+','+ str(line[1])+','+ str(line[2])+','+ str(line[2])+',NULL,NULL,NULL\n')
+            elif "ATCC" in line[2]:
+                f.write (str(line[0])+','+ str(line[1])+','+ str(line[2])+','+'NULL,'+ str(line[2])+',NULL,NULL\n')
+            elif "A_sydowii" in line[2]:
+                f.write(str(line[0]) + ',' + str(line[1]) + ',' + str(line[2]) + ',' + 'NULL,NULL,' + str(line[2]) + ',NULL\n')
+            elif "ATGM" in line[2]:
+                f.write(str(line[0]) + ',' + str(line[1]) + ',' + str(line[2]) + ',' + 'NULL,NULL,NULL,' + str(line1[3]) + '\n')
+            else:
+                print(line1)
+f.close()
+
