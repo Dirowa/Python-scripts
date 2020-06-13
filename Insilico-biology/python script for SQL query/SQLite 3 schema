@@ -1,0 +1,60 @@
+sqlite> .schema
+CREATE TABLE Augustus_Output (
+   Gene_ID varchar(7) NOT NULL CONSTRAINT Augustus_Output_pk PRIMARY KEY,
+   Protein_Sequence varchar(5000),
+   Start_Codon_Location varchar(20) NOT NULL,
+   Stop_codon_location varchar(20) NOT NULL,
+   Transcript_range varchar(20),
+   gene_range varchar(20),
+   strand varchar(1),
+   CDS varchar(100),
+   Introns varchar(100) NOT NULL
+);
+CREATE TABLE SignalP_Prediction (
+   SignalP_ID integer NOT NULL CONSTRAINT SignalP_Prediction_pk PRIMARY KEY,
+   Augustus_Output_Gene_ID varchar(7),
+   protein_size varchar(12),
+   SP_secSPI decimal(1,9),
+   CS_position varchar(40),
+   Mature_Protein varchar(5000) NOT NULL
+);
+CREATE TABLE Pfam_Output (
+   Pfam_ID smallint NOT NULL CONSTRAINT Pfam_Output_pk PRIMARY KEY,
+   Augustus_Output_Gene_ID varchar(7),
+   query_name varchar(30),
+   Accession varchar(20),
+   sequence_evalue float,
+   sequence_score decimal(5,2),
+   sequence_bias decimal(3,2),
+   Best_1_Domain_E_value integer,
+   Best_1_Domain_score integer,
+   Best_1_Domain_bias integer,
+   exp decimal(2,2),
+   reg tinyint,
+   clu tinyint,
+   ov tinyint,
+   env tinyint,
+   dom tinyint,
+   rep tinyint,
+   inc tinyint
+);
+CREATE TABLE A_sydowii (
+   Gene_ID varchar(100) NOT NULL CONSTRAINT A_sydowii_pk PRIMARY KEY,
+   Protein_sequence varchar(5000) NOT NULL
+);
+CREATE TABLE Abisporus (
+   Gene_ID varchar(100) NOT NULL CONSTRAINT Abisporus_pk PRIMARY KEY,
+   Protein_sequence varchar(5000) NOT NULL
+);
+CREATE TABLE ATCC (
+   Gene_ID varchar(100) NOT NULL CONSTRAINT ATCC_pk PRIMARY KEY,
+   Protein_sequence varchar(5000) NOT NULL
+);
+CREATE TABLE orthoMCL_grouptags (
+   OthoMCL_ID integer NOT NULL CONSTRAINT orthoMCL_grouptags_pk PRIMARY KEY,
+   OG_group varchar(10) NOT NULL,
+   gene_ID text NOT NULL,
+   Abisporus_Gene_ID text,
+   ATCC_Gene_ID text,
+   A_sydowii_Gene_ID text,
+   Augustus_Output_Gene_ID text
