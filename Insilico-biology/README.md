@@ -17,6 +17,8 @@ Due loads of files are created by SignalP, a pythons crypt was used to make a su
 OrthoMCL is preformed to select all genes from the 4 species and group them together in the orthologue group.\
 This is done by a shell script, who uses a tarzip of OrthoMCL containing all scripts
 
+To gain all avaible knowledge about the proteins of the proteins HMM search is used with the HMM package. a shell script is used to preform this
+
 
 ![alt text](https://github.com/Dirowa/Python-scripts/blob/master/Insilico-biology/Pipeline_donny.png)
 
