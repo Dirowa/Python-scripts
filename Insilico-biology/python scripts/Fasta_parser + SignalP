@@ -1,0 +1,160 @@
+####################################################################################
+# This python script is used to breakdown a fasta format in separate files#        #
+# After SingalP shell command is preformed                                         #
+# This can be updated by making a shell scrypt to preform a python script to use   #
+# The OS command of Singal P                                                       #
+####################################################################################
+
+
+
+#############
+# Info#######
+###############
+
+#Output from augusts will be converted in separated Fasta files
+#input wanted from SignalP
+    #Separate file
+    #Sequence header starting with >
+        #followd by a unique name of the seuqnece
+        # rest of header line (separated white space is ignored
+
+    #protein sequence
+        #letter abberation of aminoacids
+        # other letters and digits = X as unkown
+        # * need to be removed
+
+#will be continued
+
+# This PY MUST RUN AS THE SAME DIR WHERE INPUTFULE IS LOCATED
+# IN SAME DIR WILL BE A NEW DIR CREATED
+
+#######################################
+##3 IMPORTANT#####################
+##################################
+# run the script on the location where the SingalP tar is unzipped!
+#in same location is the file needed from augustus
+
+
+##################################
+## Things to be made and imported#
+##################################
+import os
+import shutil
+i = 0
+
+#parsing part
+Inputfile = "atgm_augustus.fasta"
+Outputdir = "signalP-data"
+allseq=""
+proteinseq = []
+proteinname = []
+
+#singalP part
+SingalP_output_dir = "singalP-output"
+singalP_input_dir = "/home/atgm2029/final/data/signalp-5.0/" + Outputdir
+
+
+
+
+
+###########################seq_parser_SingalP.py
+# Reading of sequence file#
+###########################
+#checks weither the dir already exist due rerunning program
+if os.path.exists(Outputdir):
+    print("files are already there to work with singalP (or dir just exist")
+
+else:
+#file openen zolang het in gebruik is
+    with open (Inputfile , "r") as file:
+        for line in file:
+        #for every > in line
+            if ">" in line:
+            #replace start with nothing
+            #replace every whitespace by _
+            #replace dubble _ by nothing
+                line = line.replace("start", "").replace(" ", "_").replace("__","")
+            #remove /n/r and add to list
+                proteinname.append(line.rstrip())
+                print (line)
+            #everything else is protein
+            #remove *
+            #remove /n/r and add to list
+            else:
+                line.rstrip().strip()
+                allseq += line
+                print (line)
+
+    print(proteinname)
+    proteinseq = allseq.split("*")
+    print (proteinseq)
+    Pname_Pseq = dict(zip(proteinname,proteinseq))
+#print(Pname_Pseq)
+#print (Pname_Pseq)
+#####################################3
+## making different files############
+##################################
+
+#make the dict, dont make a new one if it already exist
+    os.makedirs(Outputdir ,mode = 0o777, exist_ok = True)
+
+#For every item in the dictonary, the keys proteinname and proteinseq do the following
+    for proteinname, proteinseq in Pname_Pseq.items():
+        #inser the save name combined with the place where it should be safed in the made citonary
+        #remove > becouse OS doesnt really like that
+        #add a .fasta
+        filename = (proteinname.replace(">","") + ".fasta")
+        #open the lovely file and write in it
+        file = open(filename,'w')
+        print (file)
+        #safe the name to identify with the protein seq
+        file.write(proteinname + "\n" + proteinseq )
+        print (proteinname + " is made  ")
+        print (proteinseq)
+        #close the file and DONE :D
+        file.close()
+        #move the just made file to the output directory
+        shutil.move(filename,Outputdir)
+
+#################################################
+#### Preform SingalP#############################
+#################################################
+
+
+#output dir maken
+os.makedirs(SingalP_output_dir ,mode = 0o777, exist_ok = True)
+#bepalen welke files er zijn in de input parsing ding
+files = os.listdir(singalP_input_dir)
+#print (files)
+
+#voor elke file in de output folder van het parsen
+for file in files:
+    # prefix bepalen hoe de output file wordt genoemd
+    prefix = ("SingalP-result-" + file)
+    filename1 = prefix + "_mature.fasta"
+    filename2 = prefix + "_summary.signalp5"
+    file1 = singalP_input_dir + "/" + file
+    i += 1
+
+    if os.path.exists(SingalP_output_dir + "/" + filename1):
+        print ("file is already made")
+    else:
+
+        #de command bepalen, file als input en gemaakte prefix als output
+
+        command = ("bin/signalp -fasta " + file1 + " -format short -mature -org euk -prefix " + prefix)
+        os.system(command)
+        #files die worden gemaakt bepalen en verplaatsen in de output fodler
+
+        shutil.move(filename1,SingalP_output_dir)
+        shutil.move(filename2,SingalP_output_dir)
+
+
+        #Overzicht hoe ver ik ben
+        print ("########################################")
+        print ("#############progress =" + str(i) + "/" + str(len(files)) + "#########")
+        print("########################################")
+
+print ("###############################################")
+print ("!!!!!!!!!!!!!!!!!!!! DONE!!!!!!!!!!!!!!!!!!!!!!")
+print ("###############################################")
