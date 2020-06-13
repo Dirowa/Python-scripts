@@ -1,0 +1,43 @@
+#####################################################
+# Required: 4 genes proteins, in fasta format       #
+# OrthoMCL tar packages with all coding             #
+#####################################################
+
+
+
+
+!/bin/bash
+# I want to run my calculation in a computer with 16 cores and for 8 hours
+#SBATCH -t 12:00:00
+#SBATCH -c 16
+
+#change directory to my directory where I run my orthomcl
+# cp the whole folder to the TMPDIR in cloud
+cd /home/atgm2029/final/data/orthomcl
+cp -r * $TMPDIR
+
+# change directory to the TMPDIR in cloud
+cd $TMPDIR
+
+
+# i want to see if i copied the correct files to TMPDIR
+ls -la -h
+
+# load orthomcl
+module load pre2019 biorunner orthomcl
+
+#load mcl
+module load mcl
+
+# run orthomcl by using Jos wrapper
+python2.7 JOS_orthoMCL.py -n test2 -i input
+
+# see if orthomcl  is successful, if it is i should have a lot of database files
+ls -la -h
+
+# copy the output file to my login machine
+cp $TMPDIR/groups.txt /home/atgm2029/final/data/orthomcl
+cp $TMPDIR/groups_tags.txt /home/atgm2029/final/data/orthomcl
+
+# see if the copying is okay, if yes it should show up
+ls -la -h /home/atgm2029/final/data/orthomcl
