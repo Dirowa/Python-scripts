@@ -14,6 +14,9 @@ This is all combined in one python script and if an error occours. you will star
 Due loads of files are created by SignalP, a pythons crypt was used to make a summary of it.
 
 
+OrthoMCL is preformed to select all genes from the 4 species and group them together in the orthologue group.\
+This is done by a shell script, who uses a tarzip of OrthoMCL containing all scripts
+
 
 ![alt text](https://github.com/Dirowa/Python-scripts/blob/master/Insilico-biology/Pipeline_donny.png)
 
