@@ -1,0 +1,18 @@
+f = open('pfam_table_corrected.txt','w')
+with open('pfam_table.txt','r') as file:
+    I = 1
+    for line in file:
+        if '#' not in line:
+            line = (line.replace('  ',' '))
+            line = (line.replace('        -     ', ' '))
+            line = (line.replace('         ', ' '))
+            line = (line.replace('       ', ' '))
+            line = (line.replace('  ', ' '))
+            line = (line.replace('  ', ' '))
+            line = list(line.split(' '))
+            line = list(filter(None,line))
+            print(line)
+            f.write (str(I) +',' + (str(line[18]).rstrip())+ ',' + str(line[1]) +',' + str(line[2]) +',' + str(line[3]) +',' + str(line[4])+ ',' + str(line[5]) +',' + str(line[6]) +',' + str(line[7])+',' + str(line[8])+',' + str(line[9]) +',' + str(line[10]) +',' + str(line[11]) +',' + str(line[12]) +',' + str(line[13]) +',' + str(line[14]) +',' + str(line[15]) +',' + str(line[16])+"\n")
+            I += 1
+
+f.close()
