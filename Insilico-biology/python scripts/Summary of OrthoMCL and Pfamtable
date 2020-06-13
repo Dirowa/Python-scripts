@@ -1,0 +1,84 @@
+
+#####################################################
+# it selects genes out from the pfam table###########
+# looks up their gene code in the Orthofile##########
+# look in the fasta file for their Protein sequences#
+# parse the files out in one folder in fasta format##
+#####################################################
+
+
+#####################################
+## Initials and imports##############
+#####################################
+import os
+import re
+
+Path_To_Pfamtbale = "/home/atgm2029/final/data/pfam_table"
+Path_to_Orthologs_groups_tags = '/home/atgm2029/final/data/orthomcl/groups_tags.txt'
+
+Safe_name= "summary_ortho_cellulose-gene"
+
+cellulose_gene_codes =[]
+orthologues_groups= []
+all_genes = []
+########################
+# Retrieving Gene codes#
+########################
+
+#open the pfamtable
+with open (Path_To_Pfamtbale,'r') as file:
+    for line in file:
+        #if a line contains the gene ID of cellulose
+        if "PF00150.12"in line:
+            genecode = ""
+            #split the line by " " and then only the last 2 words
+            line = line.split(" ")[-2:]
+            for element in line:
+                #atach all items of the list to gene code
+                genecode += element
+                genecode += " "
+            genecode = genecode.rstrip()
+            cellulose_gene_codes.append(genecode)
+
+#print (cellulose_gene_codes)
+#print (cellulose_gene_codes)
+
+########################################
+# Retrieving the Othorlogs##############
+# who also contain cellulose ###########
+########################################
+with open(Path_to_Orthologs_groups_tags, 'r') as file:
+    for line in file:
+        # if a line in in the ortholog group path contain cellulose genes
+        if any(cellulose_gene_codes in line for cellulose_gene_codes in cellulose_gene_codes):
+            #line will be split into 2 parts
+            #one containing the OG group, the other the genes
+            line = line.replace(":", "REMOVE-PART", 1)
+            #creating the list of the orthologs groups
+            orthologues_groups.append(line.split("REMOVE-PART")[0:1])
+            #working further with the genes
+            line = line.split("REMOVE-PART")[1:]
+            line = line[0].strip()
+
+            #split the lines containing the genes with each tab and remove the "" ele
+            OGlist = (re.split('\t',line))
+            while("" in OGlist):
+                OGlist.remove("")
+            #append the genes to a list to create lists in lists
+            all_genes.append(OGlist)
+            #print ("___________________________________________")
+
+
+#print (orthologues_groups)
+
+with open(Safe_name, 'w') as f:
+    f.write("===========================\n")
+    for i in range(len(orthologues_groups)):
+        f.write(str(orthologues_groups[i]) + "\n")
+        for g in range(len(all_genes[i])):
+            f.write(str(all_genes[i][g])+"\n")
+            f.write("--------------\n")
+        f.write("========================\n")
+#print (all_genes)
+
+
