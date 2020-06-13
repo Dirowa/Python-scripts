@@ -1,0 +1,27 @@
+#############################33########
+# set fasta files to , delimated table#
+####################################33#
+
+filename = 'A_sydowii_orf_trans_all.fasta'
+opslagnaam = 'A_sydowii.csv'
+
+proteinnames = []
+seq = ''
+
+with open(filename,'r') as file:
+    for line in file:
+        if ">" in line:
+            line = line.replace(',','.')
+            proteinnames.append(line.rstrip())
+        else:
+            seq += line.rstrip()
+
+seq = seq.split('*')
+
+f = open (opslagnaam,'w')
+i=0
+while i <= (len(proteinnames)):
+    f.write(str(proteinnames[i]) + "," + str(seq[i] +"\n"))
+    i += 1
+
+f.close()
